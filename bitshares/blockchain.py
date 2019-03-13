@@ -17,6 +17,8 @@ class Blockchain(object):
 
         This class let's you deal with blockchain related data and methods.
     """
+    LAST_HEAD_BLOCK_CACHE = None
+
     def __init__(
         self,
         blockchain_instance=None,
@@ -77,7 +79,9 @@ class Blockchain(object):
             .. note:: The block number returned depends on the ``mode`` used
                       when instanciating from this class.
         """
-        return self.info().get(self.mode)
+        block_num = self.info().get(self.mode)
+        Blockchain.LAST_HEAD_BLOCK_CACHE = block_num
+        return block_num
 
     def get_current_block(self):
         """ This call returns the current block
@@ -163,21 +167,33 @@ class Blockchain(object):
                 block_number and current head how many blocks we are willing to
                 wait, positive int
         """
-        if not blocks_waiting_for:
-            blocks_waiting_for = max(
-                1, block_number - self.get_current_block_num())
-
         repetition = 0
         # can't return the block before the chain has reached it (support
         # future block_num)
-        while self.get_current_block_num() < block_number:
+
+        # check if there is a cached head block, if it is bigger than the requested block,
+        # no call necessary
+        if Blockchain.LAST_HEAD_BLOCK_CACHE is not None and\
+                Blockchain.LAST_HEAD_BLOCK_CACHE >= block_number:
+            current_block_num = Blockchain.LAST_HEAD_BLOCK_CACHE
+        else:
+            current_block_num = self.get_current_block_num()
+
+        while current_block_num < block_number:
             repetition += 1
             time.sleep(self.block_interval)
+            if not blocks_waiting_for:
+                blocks_waiting_for = max(
+                    1, block_number - self.get_current_block_num())
             if (
                 repetition >
                 blocks_waiting_for * self.max_block_wait_repetition
             ):
                 raise Exception("Wait time for new block exceeded, aborting")
+
+            # update block_num for loop
+            current_block_num = self.get_current_block_num()
+
         # block has to be returned properly
         block = self.blockchain.rpc.get_block(block_number)
         repetition = 0
