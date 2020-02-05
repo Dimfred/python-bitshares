@@ -33,7 +33,6 @@ class Testcases(unittest.TestCase):
             expiration=expiration,
             operations=ops,
         )
-        pprint(tx.json())
         tx = tx.sign([wif], chain=prefix)
         tx.verify([PrivateKey(wif).pubkey], prefix)
         txWire = hexlify(bytes(tx)).decode("ascii")

@@ -58,7 +58,6 @@ ops = [
 ]
 operations = {o: ops.index(o) for o in ops}
 
-
 def getOperationNameForId(i):
     """ Convert an operation id into the corresponding string
     """
