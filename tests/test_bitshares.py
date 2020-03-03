@@ -13,7 +13,7 @@ from bitshares.instance import set_shared_bitshares_instance
 from .fixtures import fixture_data, bitshares
 
 from graphenebase.signedtransactions import *
-from bitsharesbase.operations import Transfer
+from bitsharesbase.operations import *
 from graphenebase.base58 import Base58
 
 class Testcases(unittest.TestCase):
@@ -79,42 +79,207 @@ class Testcases(unittest.TestCase):
     #     jtx = json.loads( jtx )
     #     print( json.dumps( jtx, indent=4 ) )
 
-    def test_my_transfer(self):
+    # def test_my_transfer(self):
 
-        top = \
+    #     top = \
+    #     {
+    #         "expiration": "2020-01-29T12:55:22",  # PointInTime??
+    #         "ref_block_num": 64476, # uint16
+    #         "ref_block_prefix": 1034601640, # uint32
+    #         "operations": [
+    #             Transfer(
+    #                 **{
+    #                     "fee": {
+    #                         "amount": 91204,
+    #                         "asset_id": "1.3.0"
+    #                     },
+    #                     "from": "1.2.100",
+    #                     "to": "1.2.101",
+    #                     "amount": {
+    #                         "amount": 133000,
+    #                         "asset_id": "1.3.0"
+    #                     },
+    #                     "memo": {
+    #                         "from": "BTS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
+    #                         "to": "BTS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
+    #                         "nonce": 17580857522633640572,
+    #                         "message": "3b37e7316b5eecf206d8dd24015ef5f3",
+    #                         "prefix": "BTS"
+    #                     },
+    #                     "extensions": []
+    #                 }
+    #             )
+    #         ],
+    #         "extensions": [], # set
+    #     }
+
+    #     tx = Signed_Transaction( **top )
+
+    #     wifs = ["5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
+    #     chain = {
+    #         'chain_id': '4018d7844c78f6a6c41c6a552b898022310fc5dec06da467ee7905a8dad512c8',
+    #         'core_symbol': 'BTS',
+    #         'prefix': 'BTS'
+    #         }
+
+    #     import json
+
+    #     sig = tx.sign( wifs, chain )
+    #     j = json.loads(str(sig))
+    #     print( "sig\n", json.dumps(j, indent=3) )
+
+    #     pub_key = PublicKey("02c0ded2bc1f1305fb0faac5e6c03ee3a1924234985427b6167ca569d13df435cf", prefix="BTS")
+
+    #     pub_keys = [pub_key]
+    #     verified = tx.verify( pub_keys, chain )
+    #     print( "Verified:", verified[0] == hexlify(bytes(pub_key)).decode() )
+
+    # def test_my_transfer_without_memo(self):
+
+    #     top = \
+    #     {
+    #         "expiration": "2020-01-29T12:55:22",  # PointInTime??
+    #         "ref_block_num": 64476, # uint16
+    #         "ref_block_prefix": 1034601640, # uint32
+    #         "operations": [
+    #             Transfer(
+    #                 **{
+    #                     "fee": {
+    #                         "amount": 91204,
+    #                         "asset_id": "1.3.0"
+    #                     },
+    #                     "from": "1.2.100",
+    #                     "to": "1.2.101",
+    #                     "amount": {
+    #                         "amount": 133000,
+    #                         "asset_id": "1.3.0"
+    #                     },
+    #                     "extensions": []
+    #                 }
+    #             )
+    #         ],
+    #         "extensions": [], # set
+    #     }
+
+    #     tx = Signed_Transaction( **top )
+
+    #     wifs = ["5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
+    #     chain = {
+    #         'chain_id': '4018d7844c78f6a6c41c6a552b898022310fc5dec06da467ee7905a8dad512c8',
+    #         'core_symbol': 'BTS',
+    #         'prefix': 'BTS'
+    #         }
+
+    #     sig = tx.sign( wifs, chain )
+
+    # def test_my_limit_order_create(self):
+    #     loc = \
+    #     {
+    #         "expiration": "2020-01-29T12:55:22",  # PointInTime??
+    #         "ref_block_num": 64476, # uint16
+    #         "ref_block_prefix": 1034601640, # uint32
+    #         "operations": [
+    #             Limit_order_create(
+    #                 **{
+    #                     "fee": {"amount": 100, "asset_id": "1.3.0"},
+    #                     "seller": "1.2.29",
+    #                     "amount_to_sell": {"amount": 100000, "asset_id": "1.3.0"},
+    #                     "min_to_receive": {"amount": 10000, "asset_id": "1.3.105"},
+    #                     "expiration": "2016-05-18T09:22:05",
+    #                     "fill_or_kill": False,
+    #                     "memo": {},
+    #                     "extensions": [],
+    #                 }
+    #             )
+    #         ],
+    #         "extensions": [], # set
+    #     }
+
+    #     tx = Signed_Transaction(**loc)
+    #     wifs = ["5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
+    #     chain = {
+    #         'chain_id': '4018d7844c78f6a6c41c6a552b898022310fc5dec06da467ee7905a8dad512c8',
+    #         'core_symbol': 'BTS',
+    #         'prefix': 'BTS'
+    #         }
+
+    #     sig = tx.sign( wifs, chain )
+
+    # def test_my_limit_order_cancel(self):
+    #     loc = \
+    #     {
+    #         "expiration": "2020-01-29T12:55:22",  # PointInTime??
+    #         "ref_block_num": 64476, # uint16
+    #         "ref_block_prefix": 1034601640, # uint32
+    #         "operations": [
+    #             Limit_order_cancel(**{
+    #                 "fee": {"amount": 0, "asset_id": "1.3.0"},
+    #                 "fee_paying_account": "1.2.104",
+    #                 "order": "1.7.51840",
+    #                 "extensions": [],
+    #             })
+    #         ],
+    #         "extensions": [], # set
+    #     }
+
+    #     tx = Signed_Transaction(**loc)
+    #     wifs = ["5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
+    #     chain = {
+    #         'chain_id': '4018d7844c78f6a6c41c6a552b898022310fc5dec06da467ee7905a8dad512c8',
+    #         'core_symbol': 'BTS',
+    #         'prefix': 'BTS'
+    #         }
+
+    #     sig = tx.sign( wifs, chain )
+
+    def test_account_create(self):
+        acc = \
         {
             "expiration": "2020-01-29T12:55:22",  # PointInTime??
             "ref_block_num": 64476, # uint16
             "ref_block_prefix": 1034601640, # uint32
             "operations": [
-                Transfer(
-                    **{
-                        "fee": {
-                            "amount": 91204,
-                            "asset_id": "1.3.0"
-                        },
-                        "from": "1.2.100",
-                        "to": "1.2.101",
-                        "amount": {
-                            "amount": 133000,
-                            "asset_id": "1.3.0"
-                        },
-                        "memo": {
-                            "from": "BTS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
-                            "to": "BTS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
-                            "nonce": 17580857522633640572,
-                            "message": "3b37e7316b5eecf206d8dd24015ef5f3",
-                            "prefix": "BTS"
-                        },
+                Account_create(**{
+                    "fee": {"amount": 1467634,"asset_id": "1.3.0"},
+                    "registrar": "1.2.33",
+                    "referrer": "1.2.27",
+                    "referrer_percent": 3,
+                    "name": "foobar-f124",
+                    "owner": {
+                        "weight_threshold": 1,
+                        "account_auths": [],
+                        'key_auths': [
+                            ['BTS6pbVDAjRFiw6fkiKYCrkz7PFeL7XNAfefrsREwg8MKpJ9VYV9x',1],
+                            ['BTS6zLNtyFVToBsBZDsgMhgjpwysYVbsQD6YhP3kRkQhANUB4w7Qp',1]
+                        ],
+                        "address_auths": []
+                    },
+                    "active": {
+                        "weight_threshold": 1,
+                        "account_auths": [],
+                        'key_auths': [
+                            ['BTS6pbVDAjRFiw6fkiKYCrkz7PFeL7XNAfefrsREwg8MKpJ9VYV9x', 1],
+                            ['BTS6zLNtyFVToBsBZDsgMhgjpwysYVbsQD6YhP3kRkQhANUB4w7Qp', 1],
+                            ['BTS8CemMDjdUWSV5wKotEimhK6c4dY7p2PdzC2qM1HpAP8aLtZfE7', 1]
+                        ],
+                       "address_auths": []
+                    },
+                    "options": {
+                        "memo_key": "BTS5TPTziKkLexhVKsQKtSpo4bAv5RnB8oXcG4sMHEwCcTf3r7dqE",
+                        "voting_account": "1.2.5",
+                        "num_witness": 0,
+                        "num_committee": 0,
+                        "votes": ["1:0"],
                         "extensions": []
-                    }
-                )
+                    },
+                    "prefix": "BTS",
+                    "extensions": []
+                })
             ],
             "extensions": [], # set
         }
 
-        tx = Signed_Transaction( **top )
-
+        tx = Signed_Transaction(**acc)
         wifs = ["5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"]
         chain = {
             'chain_id': '4018d7844c78f6a6c41c6a552b898022310fc5dec06da467ee7905a8dad512c8',
@@ -122,19 +287,7 @@ class Testcases(unittest.TestCase):
             'prefix': 'BTS'
             }
 
-        import json
-
         sig = tx.sign( wifs, chain )
-        j = json.loads(str(sig))
-        print( "sig\n", json.dumps(j, indent=3) )
-
-        pub_key = PublicKey("02c0ded2bc1f1305fb0faac5e6c03ee3a1924234985427b6167ca569d13df435cf", prefix="BTS")
-
-        pub_keys = [pub_key]
-        verified = tx.verify( pub_keys, chain )
-        print( "Verified:", verified[0] == hexlify(bytes(pub_key)).decode() )
-
-
 
     # def test_create_account(self):
     #     name = ''.join(random.choice(string.ascii_lowercase) for _ in range(12))
