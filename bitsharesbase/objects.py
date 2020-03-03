@@ -136,6 +136,9 @@ class Permission(GrapheneObject):
                 key=lambda x: PublicKey(x[0], prefix=prefix),
                 reverse=False,
             )
+
+            print("SORTED", kwargs["key_auths"])
+
             accountAuths = Map(
                 [
                     [ObjectId(e[0], "account"), Uint16(e[1])]
